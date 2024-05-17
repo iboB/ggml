@@ -983,3 +983,12 @@ ggml_backend_buffer_t ggml_backend_alloc_ctx_tensors_from_buft(struct ggml_conte
 ggml_backend_buffer_t ggml_backend_alloc_ctx_tensors(struct ggml_context * ctx, ggml_backend_t backend) {
     return ggml_backend_alloc_ctx_tensors_from_buft(ctx, ggml_backend_get_default_buffer_type(backend));
 }
+
+void ggml_allocr_set_tensor_external_data(struct ggml_tallocr * alloc, struct ggml_tensor* tensor, void* data, size_t data_offset) {
+    GGML_ASSERT(!ggml_is_view(tensor)); // views would get their data pointer from one of their sources
+    GGML_ASSERT(tensor->data == NULL); // tensor is already allocated
+    GGML_ASSERT(data_offset == 0); // not supported yet
+    tensor->data = data;
+    tensor->buffer = alloc->buffer;
+    ggml_backend_buffer_init_tensor(alloc->buffer, tensor);
+}

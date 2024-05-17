@@ -71,6 +71,13 @@ GGML_API size_t ggml_gallocr_get_buffer_size(ggml_gallocr_t galloc, int buffer_i
 GGML_API struct ggml_backend_buffer * ggml_backend_alloc_ctx_tensors_from_buft(struct ggml_context * ctx, ggml_backend_buffer_type_t buft);
 GGML_API struct ggml_backend_buffer * ggml_backend_alloc_ctx_tensors(struct ggml_context * ctx, ggml_backend_t backend);
 
+// set tensor data from external pointer (shallow copy)
+// WARNING! It is the responsibility of the user to ensure that the provided pointer:
+// * is compatible with the buffer backend (same address space)
+// * points to memory of the right size and type/quantization as described by the tensor
+// * remains valid while the associated tensor is used
+GGML_API void ggml_allocr_set_tensor_external_data(struct ggml_tallocr * alloc, struct ggml_tensor * tensor, void * data, size_t data_offset);
+
 #ifdef  __cplusplus
 }
 #endif
